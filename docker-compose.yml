@@ -1,0 +1,26 @@
+version: '3'
+services:
+  web:
+    build:
+      # where we want files pulled from
+      context: .
+      dockerfile: Dockerfile.dev
+    ports:
+      - "3000:3000"
+    volumes:
+      # Don't map /app/node_modules to anything
+      - /app/node_modules
+
+      # map current folder outside container to /app folder inside container
+      - .:/app
+  tests: # Container specifically for running npm tests
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    volumes:
+      # Don't map /app/node_modules to anything
+      - /app/node_modules
+
+      # map current folder outside container to /app folder inside container
+      - .:/app
+    command: ["npm", "run", "test"]
