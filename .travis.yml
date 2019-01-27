@@ -1,0 +1,21 @@
+# Super level permissions required anytime we use Travis
+sudo: required
+
+# List of needed programs
+services:
+  - docker # this tells Travis to install docker (we need this!)
+
+# These are a series of commands executed before tests are run
+# or project is deployed
+before_install:
+  # create docker image; tag it so we can refer it by a
+  # better name instead of an ID
+  - docker build -t malaika/docker-react -f Dockerfile.dev .
+
+# All the commands needed to run the test suite
+# Travis watches the output for each command run
+# and if anything returns non-zero, it'll signal that the
+# build has failed
+script:
+  # -- --coverage so npm run test exits without input needed
+  - docker run malaika/docker-react npm run test -- --coverage
