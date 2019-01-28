@@ -19,3 +19,37 @@ before_install:
 script:
   # -- --coverage so npm run test exits without input needed
   - docker run malaika/docker-react npm run test -- --coverage
+
+deploy:
+  # Travis CI comes preconfigured to deploy to AWS
+  provider: elasticbeanstalk
+
+  # The region where EBS instance was originally created
+  region: "us-west-1"
+
+  # The name of the created EBS instance
+  app: "docker-react-udemy-project"
+
+  # Environment name
+  env: "DockerReactUdemyProject-env"
+
+  # Where Travis CI puts zipped code files for EBS to use
+  # to run the application. Grab from S3 page for newly
+  # created EBS instance
+  bucket_name: "elasticbeanstalk-us-west-1-321358705221"
+
+  # By default, should be exactly equal to the app name
+  bucket_path: "docker-react-udemy-project"
+
+  # Only deploy code when changes detected in the master
+  # branch
+  on:
+    branch: master
+
+  # Added both access key and secret key to Travis CI
+  # environment variables section. Reference them by key
+  # name here
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key:
+    # Not sure why but this had to be in double quotes to work
+    secure: "$AWS_SECRET_KEY"
